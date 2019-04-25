@@ -8,13 +8,17 @@ let Block = function (r, c) {
   this.width = blockWidth
   this.x = blockOffset + blockWidth * c
   this.y = blockHeight * (numberOfBlockRows - r - 1) + blockOffset
-  this.color = blockColor
+  this.getColor = function () {
+    let randomColor = Math.random();
+    if (randomColor<0.01) return 'magenta'
+    else if (randomColor>=0.01 && randomColor<0.02) return 'gold'
+    else return 'firebrick'
+  }
+  this.color = this.getColor()
   this.status = true
 
 }
 let blocks = []
-let blockColor = 'darkred'
-
 function createBlocks () {
   for (let r = 0; r < numberOfBlockRows; r++) {
     blocks[r] = []
