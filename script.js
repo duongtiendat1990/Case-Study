@@ -61,8 +61,7 @@ function Game () {
     self.checkOver()
     ball.x += ball.xVelocity
     ball.y += ball.yVelocity
-    self.keyDownHandler()
-    self.keyUpHandler()
+    self.docReady()
     function drawPaddle () {
       ctx.fillStyle = paddle.color
       ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height)
@@ -85,8 +84,10 @@ function Game () {
       }
     }
   }
-  this.keyDownHandler = function () {
+  this.docReady = function () {
     window.addEventListener('keydown', self.moveSelectionKeyDown)
+    window.addEventListener('keyup', self.moveSelectionKeyUp)
+    window.addEventListener('dblclick',self.moveSelectionDoubleClick)
   }
   this.moveSelectionKeyDown = function (event) {
     switch (event.code) {
@@ -117,9 +118,6 @@ function Game () {
         break
     }
   }
-  this.keyUpHandler = function () {
-    window.addEventListener('keyup', self.moveSelectionKeyUp)
-  }
   this.moveSelectionKeyUp = function (event) {
     switch (event.code) {
       case 'ArrowLeft':
@@ -128,6 +126,25 @@ function Game () {
       case 'ArrowRight':
         paddle.rightArrowKeyPressed = false
       break;
+    }
+  }
+  this.moveSelectionDoubleClick = function () {
+    switch (self.state) {
+      case 0:
+        self.startBall()
+        self.state = 1
+        break
+      case 1:
+        self.pause()
+        self.state = 2
+        break
+      case 2:
+        self.resume()
+        self.state = 1
+        break
+      case 3:
+        self.restart()
+        break
     }
   }
 
