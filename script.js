@@ -2,6 +2,8 @@
 function Game () {
   let self = this
   this.state = 0 // 0: means idle 1: means running 2: means paused 3: means over
+  this.score = 0
+  this.magnetCollected = 0
   this.startBall = function () {
     ball.updateVelocity(ball.directionAngle, ball.velocityMagnitude)
     ball.onPaddle = false
@@ -39,6 +41,7 @@ function Game () {
   }
   this.start = function () {
     let ctx = canvas.getContext('2d')
+    let stats = statsCanvas.getContext('2d')
     ctx.clearRect(0, 0, maxWidth, maxHeight)
     ctx.beginPath()
     drawPaddle()
@@ -55,12 +58,24 @@ function Game () {
         if (blocks[r][c].status === true){
           ball.hitEdgesOfBlocks(r,c)
           ball.hitConnerOfBlocks(r,c)
+          if (blocks[r][c].status === false) {
+            self.score++
+            if (blocks[r][c].color === 'magenta') self.magnetCollected ++
+          }
         }
       }
     }
+    stats.clearRect(0,0,statsCanvas.width,statsCanvas.height)
+    stats.beginPath()
+    stats.font = "20px Arial"
+    stats.strokeText('Score: ' + self.score,0,25)
+    stats.strokeText('Magnet Collected: ' + self.magnetCollected,statsCanvas.width -200,25)
+    stats.closePath()
     self.checkOver()
-    ball.x += ball.xVelocity
-    ball.y += ball.yVelocity
+    if (!ball.onPaddle) {
+      ball.x += ball.xVelocity
+      ball.y += ball.yVelocity
+    }
     self.docReady()
     function drawPaddle () {
       ctx.fillStyle = paddle.color
@@ -85,69 +100,78 @@ function Game () {
     }
   }
   this.docReady = function () {
-    window.addEventListener('keydown', self.moveSelectionKeyDown)
-    window.addEventListener('keyup', self.moveSelectionKeyUp)
-    window.addEventListener('dblclick',self.moveSelectionDoubleClick)
+    window.addEventListener('keydown', self.keyDownHandler)
+    window.addEventListener('keyup', self.keyUpHandler)
+    window.addEventListener('dblclick',self.doubleClickHandler)
+    window.addEventListener('mousemove',paddle.moveByMouse,false)
   }
-  this.moveSelectionKeyDown = function (event) {
+  this.keyDownHandler = function (event) {
     switch (event.code) {
       case 'Space':
         switch (self.state) {
           case 0:
             self.startBall()
             self.state = 1
-            break
+          break
           case 1:
             self.pause()
             self.state = 2
-            break
+          break
           case 2:
             self.resume()
             self.state = 1
-            break
+          break
           case 3:
             self.restart()
-            break
+          break
         }
         break
       case 'ArrowLeft':
         paddle.leftArrowKeyPressed = true
-        break
+      break
       case 'ArrowRight':
         paddle.rightArrowKeyPressed = true
-        break
+      break
+      case 'ControlLeft':
+      case 'ControlRight':
+        self.holdBall()
+      break
     }
   }
-  this.moveSelectionKeyUp = function (event) {
+  this.keyUpHandler = function (event) {
     switch (event.code) {
       case 'ArrowLeft':
         paddle.leftArrowKeyPressed = false
-      break;
+      break
       case 'ArrowRight':
         paddle.rightArrowKeyPressed = false
-      break;
+      break
+      case 'ControlLeft':
+      case 'ControlRight':
+        ball.onPaddle = false
+        self.magnetCollected--
+      break
     }
   }
-  this.moveSelectionDoubleClick = function () {
+  this.doubleClickHandler = function () {
     switch (self.state) {
       case 0:
         self.startBall()
         self.state = 1
-        break
+      break
       case 1:
         self.pause()
         self.state = 2
-        break
+      break
       case 2:
         self.resume()
         self.state = 1
-        break
+      break
       case 3:
         self.restart()
-        break
+      break
     }
   }
-
   this.levelUp = function () {
     numberOfBlockRows++
     blocks[blocks.length] = []
@@ -160,8 +184,13 @@ function Game () {
       blocks[numberOfBlockRows - 1][c] = new Block(numberOfBlockRows - 1, c)
     }
   }
+  this.holdBall = function () {
+    if (self.magnetCollected>0 && (ball.y > (paddle.y - 5*ball.radius - ball.yVelocity)) && (ball.x >= paddle.x) && (ball.x <= paddle.x + paddle.width)) {
+      ball.y = paddle.y -ball.radius
+      ball.onPaddle = true
+    }
+  }
 }
-
 let game = new Game();
 let run = new IntervalTimer(game.start, 1);
 let setLevelUp;

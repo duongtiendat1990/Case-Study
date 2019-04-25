@@ -7,7 +7,7 @@ let Ball = function () {
   this.xVelocity = 0;
   this.yVelocity = 0;
   this.onPaddle = true;
-  this.velocityMagnitude = 3;
+  this.velocityMagnitude = 2;
   this.getDirection = function () {
     let directionAngle;
     if (Math.round(Math.random()) > 0.5) directionAngle = Math.random() * Math.PI / 3 + Math.PI / 12;
