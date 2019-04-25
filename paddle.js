@@ -4,15 +4,16 @@ canvas.width = window.innerWidth - 10
 const maxWidth = canvas.width
 const maxHeight = canvas.height
 let gameState = 0
-let leftArrowKeyPressed = false;
-let rightArrowKeyPressed = false;
 let Paddle = function () {
+  let self = this
+  this.leftArrowKeyPressed = false;
+  this.rightArrowKeyPressed = false;
   this.width = 400
   this.height = 10
   this.x = (maxWidth - this.width) / 2
   this.y = maxHeight - this.height
   this.color = 'saddlebrown'
-  this.velocity = maxWidth / 50
+  this.velocity = maxWidth / 200
   this.moveToLeft = function () {
     if (this.x >= 0 && (gameState === 1 || gameState === 0)) {
       if (ball.onPaddle) {
@@ -30,6 +31,10 @@ let Paddle = function () {
         ball.stickOnPaddle(dx)
       } else this.x += this.velocity
     }
+  }
+  this.move = function () {
+    if (self.leftArrowKeyPressed) self.moveToLeft()
+    if (self.rightArrowKeyPressed) self.moveToRight()
   }
 }
 let paddle = new Paddle()

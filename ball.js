@@ -36,14 +36,14 @@ let Ball = function () {
   }
   this.hitPaddle = function () {
     if ((self.y > (paddle.y - self.radius - self.yVelocity)) && (self.x >= paddle.x) && (self.x <= paddle.x + paddle.width)) {
-      // self.yVelocity = -self.yVelocity
-      self.directionAngle = Math.atan2(self.yVelocity,self.xVelocity);
       let dist = self.x - (paddle.x + paddle.width/2);
-      let angleBefore = self.directionAngle;
-      self.directionAngle = self.directionAngle* 2 * dist/paddle.width * ((self.xVelocity<0?self.xVelocity===0?0:1:-1)) + Math.PI  * ((self.xVelocity<0?self.xVelocity===0?0:-1:1)*dist/paddle.width + 1.5) + (Math.PI/2 *(1-2*Math.abs(dist/paddle.width))-self.directionAngle*(1-2*Math.abs(dist/paddle.width)));
-      let angleAfter = self.directionAngle;
-      self.updateVelocity(-self.directionAngle,self.velocityMagnitude);
-      // if (self.yVelocity>0) self.yVelocity = -self.yVelocity;
+      xVelocityBefore = self.xVelocity
+      reverseX = self.xVelocity* 2 * dist/paddle.width * (self.xVelocity===0?0:self.xVelocity<0?-1:1)
+      calculateX = Math.sqrt(self.velocityMagnitude* self.velocityMagnitude)*dist/paddle.width -(self.xVelocity/self.velocityMagnitude)*Math.sqrt(self.velocityMagnitude* self.velocityMagnitude)*(-dist/paddle.width)
+      self.xVelocity = self.xVelocity* 2 * dist/paddle.width * (self.xVelocity===0?0:self.xVelocity<0?-1:1) + (1-Math.abs(self.xVelocity/self.velocityMagnitude))*Math.sqrt(self.velocityMagnitude* self.velocityMagnitude)*dist/paddle.width;
+      xVelocityAfter = self.xVelocity
+      self.yVelocity = - Math.sqrt(self.velocityMagnitude*self.velocityMagnitude-self.xVelocity*self.xVelocity)
+      yVelocityAfter = self.yVelocity
     }
   }
   this.hitConnerOfPaddle = function () {

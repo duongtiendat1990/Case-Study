@@ -46,6 +46,7 @@ function Game () {
     drawBlocks()
     ctx.stroke()
     ctx.closePath()
+    paddle.move();
     ball.hitEdges()
     ball.hitPaddle()
     ball.hitConnerOfPaddle()
@@ -58,7 +59,8 @@ function Game () {
     self.checkOver()
     ball.x += ball.xVelocity
     ball.y += ball.yVelocity
-    self.docReady()
+    self.keyDownHandler()
+    self.keyUpHandler()
     function drawPaddle () {
       ctx.fillStyle = paddle.color
       ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height)
@@ -81,10 +83,10 @@ function Game () {
       }
     }
   }
-  this.docReady = function () {
-    window.addEventListener('keydown', self.moveSelection)
+  this.keyDownHandler = function () {
+    window.addEventListener('keydown', self.moveSelectionKeyDown)
   }
-  this.moveSelection = function (event) {
+  this.moveSelectionKeyDown = function (event) {
     switch (event.code) {
       case 'Space':
         switch (self.state) {
@@ -106,11 +108,24 @@ function Game () {
         }
         break
       case 'ArrowLeft':
-        paddle.moveToLeft()
+        paddle.leftArrowKeyPressed = true
         break
       case 'ArrowRight':
-        paddle.moveToRight()
+        paddle.rightArrowKeyPressed = true
         break
+    }
+  }
+  this.keyUpHandler = function () {
+    window.addEventListener('keyup', self.moveSelectionKeyUp)
+  }
+  this.moveSelectionKeyUp = function (event) {
+    switch (event.code) {
+      case 'ArrowLeft':
+        paddle.leftArrowKeyPressed = false
+      break;
+      case 'ArrowRight':
+        paddle.rightArrowKeyPressed = false
+      break;
     }
   }
 
