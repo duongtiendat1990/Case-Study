@@ -1,7 +1,7 @@
-let blockOffset = ball.radius * 4 + 2
+let blockOffset = balls[0].radius * 4 + 2
 let numberOfBlockRows = 5
 let numberOfBlockColumn = 20
-let blockHeight = (maxHeight - paddle.height - ball.radius * 2 - blockOffset) / 30
+let blockHeight = (maxHeight - paddle.height - balls[0].radius * 2 - blockOffset) / 30
 let blockWidth = (maxWidth - blockOffset * 2) / numberOfBlockColumn
 let Block = function (r, c) {
   this.height = blockHeight

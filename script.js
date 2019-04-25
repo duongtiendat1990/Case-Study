@@ -1,14 +1,24 @@
 
 function Game () {
   let self = this
-  this.state = 0 // 0: means idle 1: means running 2: means paused 3: means over
+  // gameState = 0
   this.score = 0
   this.magnetCollected = 0
-  this.startBall = function () {
+  this.showMessage = function (content) {
+    message.innerHTML = content;
+    message.style.visibility = "visible";
+  }
+  this.accelerateBall = function () {
+    for (let ball of balls){
+      ball.xVelocity *=1.1
+      ball.yVelocity *=1.1
+    }
+  }
+  this.startBall = function (ball) {
     ball.updateVelocity(ball.directionAngle, ball.velocityMagnitude)
     ball.onPaddle = false
     setLevelUp = new IntervalTimer(self.levelUp, 45000)
-    accelerateBall = new IntervalTimer(ball.accelerate(),10)
+    accelerate = new IntervalTimer(self.accelerateBall,1000)
   }
   this.restart = function () {
     document.location.reload()
@@ -16,88 +26,95 @@ function Game () {
   this.pause = function () {
     run.pause()
     setLevelUp.pause()
-    accelerateBall.pause()
+    accelerate.pause()
   }
   this.resume = function () {
     run.resume()
     setLevelUp.resume()
-    accelerateBall.resume()
+    accelerate.resume()
   }
   this.over = function () {
+    self.showMessage('Game Over!')
     run.stop()
     setLevelUp.stop()
-    accelerateBall.stop()
+    accelerate.stop()
   }
-  this.checkOver = function () {
-    let distanceToMaxHeight = maxHeight - ball.radius - ball.yVelocity
-    if (ball.y >= distanceToMaxHeight) {
-      self.over()
-      self.state = 3
-    }
-    for (let r = 0; r < blocks.length; r++) {
-      for (let c = 0; c < blocks[r].length; c++) {
-        if (blocks[r][c].status && ((blocks[r][c].y + blockHeight) >= (paddle.y - ball.radius * 2))) {
-          self.over()
-          self.state = 3
-        }
+  this.removeBall = function () {
+    for (let ball of balls){
+      let distanceToMaxHeight = maxHeight - ball.radius
+      if (ball.y >= distanceToMaxHeight) {
+        let index =balls.indexOf(ball)
+        balls.splice(index,1)
       }
     }
   }
-  this.start = function () {
-    let ctx = canvas.getContext('2d')
-    let stats = statsCanvas.getContext('2d')
-    ctx.clearRect(0, 0, maxWidth, maxHeight)
-    ctx.beginPath()
-    drawPaddle()
-    drawBall()
-    drawBlocks()
-    ctx.stroke()
-    ctx.closePath()
-    paddle.move();
-    ball.hitEdges()
-    ball.hitPaddle()
-    ball.hitConnerOfPaddle()
-    for (let r = 0; r < blocks.length; r++) {
-      for (let c = 0; c < blocks[r].length; c++) {
-        if (blocks[r][c].status === true){
-          ball.hitEdgesOfBlocks(r,c)
-          ball.hitConnerOfBlocks(r,c)
-          if (blocks[r][c].status === false) {
-            self.score++
-            if (blocks[r][c].color === 'magenta') self.magnetCollected ++
+  this.checkOver = function () {
+    if (balls.length === 0){
+      self.over()
+      gameState = 3
+    }else {
+      for (let r = 0; r < blocks.length; r++) {
+        for (let c = 0; c < blocks[r].length; c++) {
+          if (blocks[r][c].status && ((blocks[r][c].y + blockHeight) >= (paddle.y - 10 * 2))) {
+            self.over()
+            gameState = 3
           }
         }
       }
     }
+  }
+  this.checkWin = function () {
+    if (self.score === blocks.length*blocks[blocks.length-1].length) {
+      self.showMessage('You Win')
+      run.stop()
+      setLevelUp.stop()
+      accelerate.stop()
+    }
+  }
+  this.start = function () {
+    ctx.clearRect(0, 0, maxWidth, maxHeight)
+    for (let ball of balls){
+      paddle.draw()
+      ball.hitEdges(ball)
+      ball.hitPaddle(ball)
+      ball.hitConnerOfPaddle(ball)
+      for (let r = 0; r < blocks.length; r++) {
+        for (let c = 0; c < blocks[r].length; c++) {
+          if (blocks[r][c].status === true){
+            ball.hitEdgesOfBlocks(ball,r,c)
+            ball.hitConnerOfBlocks(ball,r,c)
+            if (blocks[r][c].status === false) {
+              self.score++
+              if (blocks[r][c].color === 'magenta') self.magnetCollected ++
+              if (blocks[r][c].color === 'gold') self.addBall(ball)
+            }
+          }
+        }
+      }
+      self.updateBall(ball)
+      ball.draw(ball)
+      self.docReady()
+      paddle.move(ball);
+      drawBlocks()
+    }
+    self.removeBall()
+    self.checkWin()
+    self.checkOver()
     stats.clearRect(0,0,statsCanvas.width,statsCanvas.height)
     stats.beginPath()
     stats.font = "20px Arial"
     stats.strokeText('Score: ' + self.score,0,25)
     stats.strokeText('Magnet Collected: ' + self.magnetCollected,statsCanvas.width -200,25)
     stats.closePath()
-    self.checkOver()
-    if (!ball.onPaddle) {
-      ball.x += ball.xVelocity
-      ball.y += ball.yVelocity
-    }
-    self.docReady()
-    function drawPaddle () {
-      ctx.fillStyle = paddle.color
-      ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height)
-    }
-
-    function drawBall () {
-      ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2)
-      ctx.fillStyle = ball.color
-      ctx.fill()
-    }
 
     function drawBlocks () {
       for (let r = 0; r < blocks.length; r++) {
         for (let c = 0; c < blocks[r].length; c++) {
           if (blocks[r][c].status) {
+            ctx.beginPath()
             ctx.fillStyle = blocks[r][c].color
             ctx.fillRect(blocks[r][c].x + 1, blocks[r][c].y + 1, blocks[r][c].width - 1, blocks[r][c].height - 1)
+            ctx.closePath()
           }
         }
       }
@@ -112,18 +129,18 @@ function Game () {
   this.keyDownHandler = function (event) {
     switch (event.code) {
       case 'Space':
-        switch (self.state) {
+        switch (gameState) {
           case 0:
-            self.startBall()
-            self.state = 1
+            self.startBall(balls[0])
+            gameState = 1
           break
           case 1:
             self.pause()
-            self.state = 2
+            gameState = 2
           break
           case 2:
             self.resume()
-            self.state = 1
+            gameState = 1
           break
           case 3:
             self.restart()
@@ -152,24 +169,24 @@ function Game () {
       break
       case 'ControlLeft':
       case 'ControlRight':
-        ball.onPaddle = false
+        for (let ball of balls) ball.onPaddle = false
         self.magnetCollected--
       break
     }
   }
   this.doubleClickHandler = function () {
-    switch (self.state) {
+    switch (gameState) {
       case 0:
-        self.startBall()
-        self.state = 1
+        self.startBall(balls[0])
+        gameState = 1
       break
       case 1:
         self.pause()
-        self.state = 2
+        gameState = 2
       break
       case 2:
         self.resume()
-        self.state = 1
+        gameState = 1
       break
       case 3:
         self.restart()
@@ -188,10 +205,25 @@ function Game () {
       blocks[numberOfBlockRows - 1][c] = new Block(numberOfBlockRows - 1, c)
     }
   }
+  this.addBall = function (ball) {
+    ball.velocityMagnitude = Math.sqrt(ball.xVelocity*ball.xVelocity + ball.yVelocity*ball.yVelocity)
+    ball.directionAngle = Math.acos(ball.xVelocity/ball.velocityMagnitude)
+    let newBallX = ball.x+Math.cos(ball.directionAngle)*ball.radius*2
+    let newBallY = ball.y-Math.sin(ball.directionAngle)*ball.radius*2
+    balls[balls.length]=new Ball(false,ball.xVelocity,ball.yVelocity,newBallX,newBallY)
+  }
   this.holdBall = function () {
-    if (self.magnetCollected>0 && (ball.y > (paddle.y - 5*ball.radius - ball.yVelocity)) && (ball.x >= paddle.x) && (ball.x <= paddle.x + paddle.width)) {
-      ball.y = paddle.y -ball.radius
-      ball.onPaddle = true
+    for (let ball of balls) {
+      if (self.magnetCollected>0 && (ball.y > (paddle.y - 5*ball.radius - ball.yVelocity)) && (ball.x >= paddle.x) && (ball.x <= paddle.x + paddle.width)) {
+        ball.y = paddle.y -ball.radius
+        ball.onPaddle = true
+      }
+    }
+  }
+  this.updateBall = function (ball){
+    if (!ball.onPaddle) {
+      ball.x += ball.xVelocity
+      ball.y += ball.yVelocity
     }
   }
 }
