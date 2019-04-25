@@ -52,8 +52,10 @@ function Game () {
     ball.hitConnerOfPaddle()
     for (let r = 0; r < blocks.length; r++) {
       for (let c = 0; c < blocks[r].length; c++) {
-        ball.hitEdgesOfBlocks(r,c)
-        ball.hitConnerOfBlocks(r,c)
+        if (blocks[r][c].status === true){
+          ball.hitEdgesOfBlocks(r,c)
+          ball.hitConnerOfBlocks(r,c)
+        }
       }
     }
     self.checkOver()

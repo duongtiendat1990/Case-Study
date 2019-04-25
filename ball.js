@@ -70,95 +70,93 @@ let Ball = function () {
     let ballOnBottomLeftOfBlock = self.x < blocks[r][c].x && self.y > blocks[r][c].y + blockHeight
     let ballOnUpRightOfBlock = self.x > blocks[r][c].x + blockWidth && self.y < blocks[r][c].y
     let ballOnBottomRightOfBlock = self.x > blocks[r][c].x + blockWidth && self.y > blocks[r][c].y + blockHeight
-    if (blocks[r][c].status) {
-      if (ballOnUpLeftOfBlock && ballGoesDownRight && distanceToUpLeftConnerOfBlock <= self.radius) {
-        if (r === blocks.length - 1) {
-          if (c === 0) {
-            self.xVelocity = -self.xVelocity
-            self.yVelocity = -self.yVelocity
-            blocks[r][c].status = false
-          } else if (blocks[r][c - 1].status === false) {
-            self.xVelocity = -self.xVelocity
-            self.yVelocity = -self.yVelocity
-            blocks[r][c].status = false
-          }
-        } else if (c === 0) {
-          if (blocks[r + 1][c].status === false) {
-            self.xVelocity = -self.xVelocity
-            self.yVelocity = -self.yVelocity
-            blocks[r][c].status = false
-          }
-        } else if (blocks[r + 1][c].status === false && blocks[r][c - 1].status === false) {
+    if (ballOnUpLeftOfBlock && ballGoesDownRight && distanceToUpLeftConnerOfBlock <= self.radius) {
+      if (r === blocks.length - 1) {
+        if (c === 0) {
+          self.xVelocity = -self.xVelocity
+          self.yVelocity = -self.yVelocity
+          blocks[r][c].status = false
+        } else if (blocks[r][c - 1].status === false) {
           self.xVelocity = -self.xVelocity
           self.yVelocity = -self.yVelocity
           blocks[r][c].status = false
         }
-      } else if (ballOnBottomLeftOfBlock && ballGoesUpRight && distanceToBottomLeftConnerOfBlock <= self.radius) {
-        if (r === 0) {
-          if (c === 0) {
-            self.xVelocity = -self.xVelocity
-            self.yVelocity = -self.yVelocity
-            blocks[r][c].status = false
-          } else if (blocks[r][c - 1].status === false) {
-            self.xVelocity = -self.xVelocity
-            self.yVelocity = -self.yVelocity
-            blocks[r][c].status = false
-          }
-        } else if (c === 0) {
-          if (blocks[r - 1][c].status === false) {
-            self.xVelocity = -self.xVelocity
-            self.yVelocity = -self.yVelocity
-            blocks[r][c].status = false
-          }
-        } else if (blocks[r - 1][c].status === false && blocks[r][c - 1].status === false) {
+      } else if (c === 0) {
+        if (blocks[r + 1][c].status === false) {
           self.xVelocity = -self.xVelocity
           self.yVelocity = -self.yVelocity
           blocks[r][c].status = false
         }
-      } else if (ballOnUpRightOfBlock && ballGoesDownLeft && distanceToUpRightConnerOfBlock <= self.radius) {
-        if (r === blocks.length - 1) {
-          if (c === numberOfBlockColumn - 1) {
-            self.xVelocity = -self.xVelocity
-            self.yVelocity = -self.yVelocity
-            blocks[r][c].status = false
-          } else if (blocks[r][c + 1] === false) {
-            self.xVelocity = -self.xVelocity
-            self.yVelocity = -self.yVelocity
-            blocks[r][c].status = false
-          }
-        } else if (c === numberOfBlockColumn - 1) {
-          if (blocks[r + 1][c].status === false) {
-            self.xVelocity = -self.xVelocity
-            self.yVelocity = -self.yVelocity
-            blocks[r][c].status = false
-          }
-        } else if (blocks[r + 1][c].status === false && blocks[r][c + 1] === false) {
+      } else if (blocks[r + 1][c].status === false && blocks[r][c - 1].status === false) {
+        self.xVelocity = -self.xVelocity
+        self.yVelocity = -self.yVelocity
+        blocks[r][c].status = false
+      }
+    } else if (ballOnBottomLeftOfBlock && ballGoesUpRight && distanceToBottomLeftConnerOfBlock <= self.radius) {
+      if (r === 0) {
+        if (c === 0) {
+          self.xVelocity = -self.xVelocity
+          self.yVelocity = -self.yVelocity
+          blocks[r][c].status = false
+        } else if (blocks[r][c - 1].status === false) {
           self.xVelocity = -self.xVelocity
           self.yVelocity = -self.yVelocity
           blocks[r][c].status = false
         }
-      } else if (ballOnBottomRightOfBlock && ballGoesUpLeft && distanceToBottomRightConnerOfBlock <= self.radius) {
-        if (r === 0) {
-          if (c === numberOfBlockColumn - 1) {
-            self.xVelocity = -self.xVelocity
-            self.yVelocity = -self.yVelocity
-            blocks[r][c].status = false
-          } else if (blocks[r][c + 1].status === false) {
-            self.xVelocity = -self.xVelocity
-            self.yVelocity = -self.yVelocity
-            blocks[r][c].status = false
-          }
-        } else if (c === numberOfBlockColumn - 1) {
-          if (blocks[r - 1][c].status === false) {
-            self.xVelocity = -self.xVelocity
-            self.yVelocity = -self.yVelocity
-            blocks[r][c].status = false
-          }
-        } else if (blocks[r - 1][c].status === false && blocks[r][c + 1].status === false) {
+      } else if (c === 0) {
+        if (blocks[r - 1][c].status === false) {
           self.xVelocity = -self.xVelocity
           self.yVelocity = -self.yVelocity
           blocks[r][c].status = false
         }
+      } else if (blocks[r - 1][c].status === false && blocks[r][c - 1].status === false) {
+        self.xVelocity = -self.xVelocity
+        self.yVelocity = -self.yVelocity
+        blocks[r][c].status = false
+      }
+    } else if (ballOnUpRightOfBlock && ballGoesDownLeft && distanceToUpRightConnerOfBlock <= self.radius) {
+      if (r === blocks.length - 1) {
+        if (c === numberOfBlockColumn - 1) {
+          self.xVelocity = -self.xVelocity
+          self.yVelocity = -self.yVelocity
+          blocks[r][c].status = false
+        } else if (blocks[r][c + 1] === false) {
+          self.xVelocity = -self.xVelocity
+          self.yVelocity = -self.yVelocity
+          blocks[r][c].status = false
+        }
+      } else if (c === numberOfBlockColumn - 1) {
+        if (blocks[r + 1][c].status === false) {
+          self.xVelocity = -self.xVelocity
+          self.yVelocity = -self.yVelocity
+          blocks[r][c].status = false
+        }
+      } else if (blocks[r + 1][c].status === false && blocks[r][c + 1] === false) {
+        self.xVelocity = -self.xVelocity
+        self.yVelocity = -self.yVelocity
+        blocks[r][c].status = false
+      }
+    } else if (ballOnBottomRightOfBlock && ballGoesUpLeft && distanceToBottomRightConnerOfBlock <= self.radius) {
+      if (r === 0) {
+        if (c === numberOfBlockColumn - 1) {
+          self.xVelocity = -self.xVelocity
+          self.yVelocity = -self.yVelocity
+          blocks[r][c].status = false
+        } else if (blocks[r][c + 1].status === false) {
+          self.xVelocity = -self.xVelocity
+          self.yVelocity = -self.yVelocity
+          blocks[r][c].status = false
+        }
+      } else if (c === numberOfBlockColumn - 1) {
+        if (blocks[r - 1][c].status === false) {
+          self.xVelocity = -self.xVelocity
+          self.yVelocity = -self.yVelocity
+          blocks[r][c].status = false
+        }
+      } else if (blocks[r - 1][c].status === false && blocks[r][c + 1].status === false) {
+        self.xVelocity = -self.xVelocity
+        self.yVelocity = -self.yVelocity
+        blocks[r][c].status = false
       }
     }
   }
@@ -171,14 +169,14 @@ let Ball = function () {
     let ballHitBottomOfBlock = (self.y <= verticalDistanceFromBottom && self.y > blocks[r][c].y + blockHeight)
     let ballHitTopOfBlock = (self.y >= verticalDistanceFromTop && self.y < blocks[r][c].y)
     let ballInBlockWidthScope = self.x >= blocks[r][c].x && self.x <= blocks[r][c].x + blockWidth
-    if ((ballHitBottomOfBlock || ballHitTopOfBlock) && ballInBlockWidthScope && blocks[r][c].status) {
+    if ((ballHitBottomOfBlock || ballHitTopOfBlock) && ballInBlockWidthScope) {
       self.yVelocity = -self.yVelocity
       blocks[r][c].status = false
     }
     let ballHitLeftOfBlock = (self.x >= horizontalDistanceFromLeft && self.x < blocks[r][c].x)
     let ballHitRightOfBlock = (self.x <= horizontalDistanceFromRight && self.x > blocks[r][c].x + blockWidth)
     let ballInBlockHeightScope = self.y > blocks[r][c].y && self.y < blocks[r][c].y + blockHeight
-    if ((ballHitLeftOfBlock || ballHitRightOfBlock) && ballInBlockHeightScope && blocks[r][c].status) {
+    if ((ballHitLeftOfBlock || ballHitRightOfBlock) && ballInBlockHeightScope) {
       self.xVelocity = -self.xVelocity
       blocks[r][c].status = false
     }
