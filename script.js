@@ -7,7 +7,8 @@ function Game () {
   this.startBall = function () {
     ball.updateVelocity(ball.directionAngle, ball.velocityMagnitude)
     ball.onPaddle = false
-    setLevelUp = new IntervalTimer(self.levelUp, 60000)
+    setLevelUp = new IntervalTimer(self.levelUp, 45000)
+    accelerateBall = new IntervalTimer(ball.accelerate(),10)
   }
   this.restart = function () {
     document.location.reload()
@@ -15,14 +16,17 @@ function Game () {
   this.pause = function () {
     run.pause()
     setLevelUp.pause()
+    accelerateBall.pause()
   }
   this.resume = function () {
     run.resume()
     setLevelUp.resume()
+    accelerateBall.resume()
   }
   this.over = function () {
     run.stop()
     setLevelUp.stop()
+    accelerateBall.stop()
   }
   this.checkOver = function () {
     let distanceToMaxHeight = maxHeight - ball.radius - ball.yVelocity
