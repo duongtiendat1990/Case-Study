@@ -70,6 +70,23 @@ function Game () {
       accelerate.stop()
     }
   }
+
+  this.drawGuideline =function (stats) {
+    stats.clearRect(0, 0, statsCanvas.width, statsCanvas.height)
+    stats.beginPath()
+    stats.font = '20px Arial'
+    stats.strokeText('Score: ' + self.score, 0, 25)
+    stats.fillStyle = 'gold'
+    stats.fillRect(120, 8, blockWidth, blockHeight)
+    stats.strokeText('Add ball', 125 + blockWidth, 25)
+    stats.fillStyle = 'magenta'
+    stats.fillRect(220 + blockWidth, 8, blockWidth, blockHeight)
+    stats.strokeText('Magnet-Press\'Ctrl\' to use', 225 + blockWidth * 2, 25)
+    stats.strokeText('Press \'Space\' to start\/pause\/resume', 525 + blockWidth * 2, 25)
+    stats.strokeText('Magnets Collected: ' + self.magnetCollected, statsCanvas.width - 200, 25)
+    stats.closePath()
+  }
+
   this.start = function () {
     ctx.clearRect(0, 0, maxWidth, maxHeight)
     for (let ball of balls) {
@@ -99,19 +116,7 @@ function Game () {
     self.removeBall()
     self.checkWin()
     self.checkOver()
-    stats.clearRect(0, 0, statsCanvas.width, statsCanvas.height)
-    stats.beginPath()
-    stats.font = '20px Arial'
-    stats.strokeText('Score: ' + self.score, 0, 25)
-    stats.fillStyle = 'gold'
-    stats.fillRect(120,8,blockWidth,blockHeight)
-    stats.strokeText('Add ball',125+blockWidth,25)
-    stats.fillStyle = 'magenta'
-    stats.fillRect(220 + blockWidth,8,blockWidth,blockHeight)
-    stats.strokeText("Magnet-Press'Ctrl' to use",225+blockWidth*2,25)
-    stats.strokeText("Press 'Space' to start\/pause\/resume",525+blockWidth*2,25)
-    stats.strokeText('Magnets Collected: ' + self.magnetCollected, statsCanvas.width - 200, 25)
-    stats.closePath()
+    self.drawGuideline(stats)
 
     function drawBlocks () {
       for (let r = 0; r < blocks.length; r++) {
