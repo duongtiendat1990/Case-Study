@@ -71,7 +71,7 @@ function Game () {
     }
   }
 
-  this.drawGuideline =function (stats) {
+  this.drawGuideline = function (stats) {
     stats.clearRect(0, 0, statsCanvas.width, statsCanvas.height)
     stats.beginPath()
     stats.font = '20px Arial'
