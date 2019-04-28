@@ -1,24 +1,23 @@
-
 function Game () {
   let self = this
-  // gameState = 0
   this.score = 0
   this.magnetCollected = 0
   this.showMessage = function (content) {
-    message.innerHTML = content;
-    message.style.visibility = "visible";
+    message.innerHTML = content
+    message.style.visibility = 'visible'
   }
   this.accelerateBall = function () {
-    for (let ball of balls){
-      ball.xVelocity *=1.1
-      ball.yVelocity *=1.1
+    for (let ball of balls) {
+      ball.xVelocity *= 1.1
+      ball.yVelocity *= 1.1
+      console.log(ball.xVelocity + '   ' + ball.yVelocity)
     }
   }
   this.startBall = function (ball) {
     ball.updateVelocity(ball.directionAngle, ball.velocityMagnitude)
     ball.onPaddle = false
-    setLevelUp = new IntervalTimer(self.levelUp, 45000)
-    accelerate = new IntervalTimer(self.accelerateBall,1000)
+    setLevelUp = new IntervalTimer(self.levelUp, 60000)
+    accelerate = new IntervalTimer(self.accelerateBall, 1000)
   }
   this.restart = function () {
     document.location.reload()
@@ -40,22 +39,22 @@ function Game () {
     accelerate.stop()
   }
   this.removeBall = function () {
-    for (let ball of balls){
+    for (let ball of balls) {
       let distanceToMaxHeight = maxHeight - ball.radius
       if (ball.y >= distanceToMaxHeight) {
-        let index =balls.indexOf(ball)
-        balls.splice(index,1)
+        let index = balls.indexOf(ball)
+        balls.splice(index, 1)
       }
     }
   }
   this.checkOver = function () {
-    if (balls.length === 0){
+    if (balls.length === 0) {
       self.over()
       gameState = 3
-    }else {
+    } else {
       for (let r = 0; r < blocks.length; r++) {
         for (let c = 0; c < blocks[r].length; c++) {
-          if (blocks[r][c].status && ((blocks[r][c].y + blockHeight) >= (paddle.y - 10 * 2))) {
+          if (blocks[r][c].status && ((blocks[r][c].y + blockHeight) >= (paddle.y - balls[0].radius * 2))) {
             self.over()
             gameState = 3
           }
@@ -64,7 +63,7 @@ function Game () {
     }
   }
   this.checkWin = function () {
-    if (self.score === blocks.length*blocks[blocks.length-1].length) {
+    if (self.score === blocks.length * blocks[blocks.length - 1].length) {
       self.showMessage('You Win')
       run.stop()
       setLevelUp.stop()
@@ -73,19 +72,19 @@ function Game () {
   }
   this.start = function () {
     ctx.clearRect(0, 0, maxWidth, maxHeight)
-    for (let ball of balls){
+    for (let ball of balls) {
       paddle.draw()
       ball.hitEdges(ball)
       ball.hitPaddle(ball)
       ball.hitConnerOfPaddle(ball)
       for (let r = 0; r < blocks.length; r++) {
         for (let c = 0; c < blocks[r].length; c++) {
-          if (blocks[r][c].status === true){
-            ball.hitEdgesOfBlocks(ball,r,c)
-            ball.hitConnerOfBlocks(ball,r,c)
+          if (blocks[r][c].status === true) {
+            ball.hitEdgesOfBlocks(ball, r, c)
+            ball.hitConnerOfBlocks(ball, r, c)
             if (blocks[r][c].status === false) {
               self.score++
-              if (blocks[r][c].color === 'magenta') self.magnetCollected ++
+              if (blocks[r][c].color === 'magenta') self.magnetCollected++
               if (blocks[r][c].color === 'gold') self.addBall(ball)
             }
           }
@@ -94,17 +93,24 @@ function Game () {
       self.updateBall(ball)
       ball.draw(ball)
       self.docReady()
-      paddle.move(ball);
+      paddle.move(ball)
       drawBlocks()
     }
     self.removeBall()
     self.checkWin()
     self.checkOver()
-    stats.clearRect(0,0,statsCanvas.width,statsCanvas.height)
+    stats.clearRect(0, 0, statsCanvas.width, statsCanvas.height)
     stats.beginPath()
-    stats.font = "20px Arial"
-    stats.strokeText('Score: ' + self.score,0,25)
-    stats.strokeText('Magnet Collected: ' + self.magnetCollected,statsCanvas.width -200,25)
+    stats.font = '20px Arial'
+    stats.strokeText('Score: ' + self.score, 0, 25)
+    stats.fillStyle = 'gold'
+    stats.fillRect(120,8,blockWidth,blockHeight)
+    stats.strokeText('Add ball',125+blockWidth,25)
+    stats.fillStyle = 'magenta'
+    stats.fillRect(220 + blockWidth,8,blockWidth,blockHeight)
+    stats.strokeText("Magnet-Press'Ctrl' to use",225+blockWidth*2,25)
+    stats.strokeText("Press 'Space' to start\/pause\/resume",525+blockWidth*2,25)
+    stats.strokeText('Magnets Collected: ' + self.magnetCollected, statsCanvas.width - 200, 25)
     stats.closePath()
 
     function drawBlocks () {
@@ -123,8 +129,8 @@ function Game () {
   this.docReady = function () {
     window.addEventListener('keydown', self.keyDownHandler)
     window.addEventListener('keyup', self.keyUpHandler)
-    window.addEventListener('dblclick',self.doubleClickHandler)
-    window.addEventListener('mousemove',paddle.moveByMouse,false)
+    window.addEventListener('dblclick', self.doubleClickHandler)
+    window.addEventListener('mousemove', paddle.moveByMouse, false)
   }
   this.keyDownHandler = function (event) {
     switch (event.code) {
@@ -133,45 +139,45 @@ function Game () {
           case 0:
             self.startBall(balls[0])
             gameState = 1
-          break
+            break
           case 1:
             self.pause()
             gameState = 2
-          break
+            break
           case 2:
             self.resume()
             gameState = 1
-          break
+            break
           case 3:
             self.restart()
-          break
+            break
         }
         break
       case 'ArrowLeft':
         paddle.leftArrowKeyPressed = true
-      break
+        break
       case 'ArrowRight':
         paddle.rightArrowKeyPressed = true
-      break
+        break
       case 'ControlLeft':
       case 'ControlRight':
         self.holdBall()
-      break
+        break
     }
   }
   this.keyUpHandler = function (event) {
     switch (event.code) {
       case 'ArrowLeft':
         paddle.leftArrowKeyPressed = false
-      break
+        break
       case 'ArrowRight':
         paddle.rightArrowKeyPressed = false
-      break
+        break
       case 'ControlLeft':
       case 'ControlRight':
         for (let ball of balls) ball.onPaddle = false
         self.magnetCollected--
-      break
+        break
     }
   }
   this.doubleClickHandler = function () {
@@ -179,18 +185,18 @@ function Game () {
       case 0:
         self.startBall(balls[0])
         gameState = 1
-      break
+        break
       case 1:
         self.pause()
         gameState = 2
-      break
+        break
       case 2:
         self.resume()
         gameState = 1
-      break
+        break
       case 3:
         self.restart()
-      break
+        break
     }
   }
   this.levelUp = function () {
@@ -206,27 +212,28 @@ function Game () {
     }
   }
   this.addBall = function (ball) {
-    ball.velocityMagnitude = Math.sqrt(ball.xVelocity*ball.xVelocity + ball.yVelocity*ball.yVelocity)
-    ball.directionAngle = Math.acos(ball.xVelocity/ball.velocityMagnitude)
-    let newBallX = ball.x+Math.cos(ball.directionAngle)*ball.radius*2
-    let newBallY = ball.y-Math.sin(ball.directionAngle)*ball.radius*2
-    balls[balls.length]=new Ball(false,ball.xVelocity,ball.yVelocity,newBallX,newBallY)
+    ball.velocityMagnitude = Math.sqrt(ball.xVelocity * ball.xVelocity + ball.yVelocity * ball.yVelocity)
+    ball.directionAngle = Math.acos(ball.xVelocity / ball.velocityMagnitude)
+    let newBallX = ball.x + Math.cos(ball.directionAngle) * ball.radius * 2
+    let newBallY = ball.y - Math.sin(ball.directionAngle) * ball.radius * 2
+    balls[balls.length] = new Ball(false, ball.xVelocity, ball.yVelocity, newBallX, newBallY)
   }
   this.holdBall = function () {
     for (let ball of balls) {
-      if (self.magnetCollected>0 && (ball.y > (paddle.y - 5*ball.radius - ball.yVelocity)) && (ball.x >= paddle.x) && (ball.x <= paddle.x + paddle.width)) {
-        ball.y = paddle.y -ball.radius
+      if (self.magnetCollected > 0 && (ball.y > (paddle.y - 5 * ball.radius - ball.yVelocity)) && (ball.x >= paddle.x) && (ball.x <= paddle.x + paddle.width)) {
+        ball.y = paddle.y - ball.radius
         ball.onPaddle = true
       }
     }
   }
-  this.updateBall = function (ball){
+  this.updateBall = function (ball) {
     if (!ball.onPaddle) {
       ball.x += ball.xVelocity
       ball.y += ball.yVelocity
     }
   }
 }
-let game = new Game();
-let run = new IntervalTimer(game.start, 1);
-let setLevelUp;
+
+let game = new Game()
+let run = new IntervalTimer(game.start, 1)
+let setLevelUp

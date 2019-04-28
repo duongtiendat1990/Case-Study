@@ -1,20 +1,20 @@
-let Ball = function (onPaddle,xVelocity,yVelocity,x,y) {
-  let self = this;
-  this.radius = 10;
-  this.x = x||maxWidth / 2;
-  this.y = y||paddle.y - this.radius;
-  this.color = 'gray';
-  this.xVelocity = xVelocity||0;
-  this.yVelocity = yVelocity||0;
-  this.onPaddle = onPaddle;
-  this.velocityMagnitude = 1.5;
+let Ball = function (onPaddle, xVelocity, yVelocity, x, y) {
+  let self = this
+  this.radius = 10
+  this.x = x || maxWidth / 2
+  this.y = y || paddle.y - this.radius
+  this.color = 'lightsteelblue'
+  this.xVelocity = xVelocity || 0
+  this.yVelocity = yVelocity || 0
+  this.onPaddle = onPaddle
+  this.velocityMagnitude = 1.5
   this.getDirection = function () {
-    let directionAngle;
-    if (Math.round(Math.random()) > 0.5) directionAngle = Math.random() * Math.PI / 3 + Math.PI / 12;
-    else directionAngle = Math.random() * Math.PI / 3 + 7 * Math.PI / 12;
-    return directionAngle;
+    let directionAngle
+    if (Math.round(Math.random()) > 0.5) directionAngle = Math.random() * Math.PI / 3 + Math.PI / 12
+    else directionAngle = Math.random() * Math.PI / 3 + 7 * Math.PI / 12
+    return directionAngle
   }
-  this.directionAngle = this.getDirection();
+  this.directionAngle = this.getDirection()
   this.updateVelocity = function (directionAngle, velocityMagnitude) {
     self.xVelocity = Math.cos(directionAngle) * velocityMagnitude
     self.yVelocity = -Math.sin(directionAngle) * velocityMagnitude
@@ -36,9 +36,10 @@ let Ball = function (onPaddle,xVelocity,yVelocity,x,y) {
   }
   this.hitPaddle = function (self) {
     if ((self.y > (paddle.y - self.radius - self.yVelocity)) && (self.x >= paddle.x) && (self.x <= paddle.x + paddle.width)) {
-      let dist = self.x - (paddle.x + paddle.width/2);
-      self.xVelocity = self.xVelocity* 2 * dist/paddle.width * (self.xVelocity===0?0:self.xVelocity<0?-1:1) + (1-Math.abs(self.xVelocity/self.velocityMagnitude))*Math.sqrt(self.velocityMagnitude* self.velocityMagnitude)*dist/paddle.width;
-      self.yVelocity = - Math.sqrt(self.velocityMagnitude*self.velocityMagnitude-self.xVelocity*self.xVelocity)
+      let dist = self.x - (paddle.x + paddle.width / 2)
+      self.xVelocity = self.xVelocity * 2 * dist / paddle.width * (self.xVelocity / self.velocityMagnitude) + Math.abs(Math.cos(Math.PI/12) - Math.abs(self.xVelocity / self.velocityMagnitude)) * self.velocityMagnitude * dist / paddle.width
+      if (self.xVelocity >= self.velocityMagnitude) self.xVelocity *=self.velocityMagnitude*Math.cos(Math.PI/12)*2*dist/paddle.width*self.xVelocity/Math.abs(self.xVelocity)
+      self.yVelocity = -Math.sqrt(self.velocityMagnitude * self.velocityMagnitude - self.xVelocity * self.xVelocity)
     }
   }
   this.hitConnerOfPaddle = function (self) {
@@ -53,7 +54,7 @@ let Ball = function (onPaddle,xVelocity,yVelocity,x,y) {
       self.yVelocity = -self.yVelocity
     }
   }
-  this.hitConnerOfBlocks = function (self,r,c) {
+  this.hitConnerOfBlocks = function (self, r, c) {
     let distanceToUpLeftConnerOfBlock = Math.sqrt((blocks[r][c].x - self.x) * (blocks[r][c].x - self.x) +
       (blocks[r][c].y - self.y) * (blocks[r][c].y - self.y))
     let distanceToUpRightConnerOfBlock = Math.sqrt((self.x - (blocks[r][c].x + blocks[r][c].width)) *
@@ -161,7 +162,7 @@ let Ball = function (onPaddle,xVelocity,yVelocity,x,y) {
     }
   }
 
-  this.hitEdgesOfBlocks = function (self,r,c) {
+  this.hitEdgesOfBlocks = function (self, r, c) {
     let verticalDistanceFromBottom = blocks[r][c].y + blockHeight + self.radius - self.yVelocity
     let horizontalDistanceFromRight = blocks[r][c].x + blockWidth + self.radius - self.xVelocity
     let verticalDistanceFromTop = blocks[r][c].y - self.radius - self.yVelocity
@@ -181,7 +182,7 @@ let Ball = function (onPaddle,xVelocity,yVelocity,x,y) {
       blocks[r][c].status = false
     }
   }
-  this.draw =function (ball) {
+  this.draw = function (ball) {
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2)
     ctx.fillStyle = ball.color
     ctx.fill()
