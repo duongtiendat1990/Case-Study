@@ -8,8 +8,8 @@ function Game () {
   }
   this.accelerateBall = function () {
     for (let ball of balls) {
-      ball.xVelocity *= 1.1
-      ball.yVelocity *= 1.1
+      ball.xVelocity *= 1.01
+      ball.yVelocity *= 1.01
       console.log(ball.xVelocity + '   ' + ball.yVelocity)
     }
   }
