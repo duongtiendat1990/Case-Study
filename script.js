@@ -10,7 +10,7 @@ function Game () {
     for (let ball of balls) {
       ball.xVelocity *= 1.01
       ball.yVelocity *= 1.01
-      console.log(ball.xVelocity + '   ' + ball.yVelocity)
+      ball.velocityMagnitude*=1.01
     }
   }
   this.startBall = function (ball) {
@@ -217,7 +217,6 @@ function Game () {
     }
   }
   this.addBall = function (ball) {
-    ball.velocityMagnitude = Math.sqrt(ball.xVelocity * ball.xVelocity + ball.yVelocity * ball.yVelocity)
     ball.directionAngle = Math.acos(ball.xVelocity / ball.velocityMagnitude)
     let newBallX = ball.x + Math.cos(ball.directionAngle) * ball.radius * 2
     let newBallY = ball.y - Math.sin(ball.directionAngle) * ball.radius * 2

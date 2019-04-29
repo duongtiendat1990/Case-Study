@@ -36,10 +36,8 @@ let Ball = function (onPaddle, xVelocity, yVelocity, x, y) {
   }
   this.hitPaddle = function (self) {
     if ((self.y > (paddle.y - self.radius - self.yVelocity)) && (self.x >= paddle.x) && (self.x <= paddle.x + paddle.width)) {
-      self.velocityMagnitude = Math.sqrt(self.xVelocity * self.xVelocity + self.yVelocity * self.yVelocity)
       let dist = self.x - (paddle.x + paddle.width / 2)
       self.xVelocity = self.xVelocity * 2 * dist / paddle.width * (self.xVelocity / self.velocityMagnitude) + Math.abs(Math.cos(Math.PI / 12) - Math.abs(self.xVelocity / self.velocityMagnitude)) * self.velocityMagnitude * dist / paddle.width
-      if (Math.abs(self.xVelocity) >= Math.abs(self.velocityMagnitude)) self.xVelocity *= self.velocityMagnitude * Math.cos(Math.PI / 12) * 2 * dist / paddle.width * self.xVelocity / Math.abs(self.xVelocity)
       self.yVelocity = -Math.sqrt(self.velocityMagnitude * self.velocityMagnitude - self.xVelocity * self.xVelocity)
     }
   }
