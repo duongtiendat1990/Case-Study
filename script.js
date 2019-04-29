@@ -220,7 +220,7 @@ function Game () {
     ball.directionAngle = Math.acos(ball.xVelocity / ball.velocityMagnitude)
     let newBallX = ball.x + Math.cos(ball.directionAngle) * ball.radius * 2
     let newBallY = ball.y - Math.sin(ball.directionAngle) * ball.radius * 2
-    balls[balls.length] = new Ball(false, ball.xVelocity, ball.yVelocity, newBallX, newBallY)
+    balls[balls.length] = new Ball(false, ball.xVelocity, ball.yVelocity, newBallX, newBallY,ball.velocityMagnitude)
   }
   this.holdBall = function () {
     for (let ball of balls) {

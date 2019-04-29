@@ -1,4 +1,4 @@
-let Ball = function (onPaddle, xVelocity, yVelocity, x, y) {
+let Ball = function (onPaddle, xVelocity, yVelocity, x, y,magnitude) {
   let self = this
   this.radius = 10
   this.x = x || maxWidth / 2
@@ -7,7 +7,7 @@ let Ball = function (onPaddle, xVelocity, yVelocity, x, y) {
   this.xVelocity = xVelocity || 0
   this.yVelocity = yVelocity || 0
   this.onPaddle = onPaddle
-  this.velocityMagnitude = 1.5
+  this.velocityMagnitude = magnitude||1.5
   this.getDirection = function () {
     let directionAngle
     if (Math.round(Math.random()) > 0.5) directionAngle = Math.random() * Math.PI / 3 + Math.PI / 12
