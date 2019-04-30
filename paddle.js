@@ -23,49 +23,40 @@ let Paddle = function () {
   this.velocity = maxWidth / 400
   this.moveToLeft = function () {
     if (gameState === 1 || gameState === 0) {
-      for (let ball of balls) {
-        if (ball.onPaddle) {
-          let dx = ball.x - self.x
-          if (self.x - self.velocity >= 0) self.x -= self.velocity
-          if (self.x - self.velocity < 0) self.x = 0
-          ball.stickOnPaddle(dx)
-        } else {
-          if (self.x - self.velocity >= 0) self.x -= self.velocity
-          else if (self.x - self.velocity < 0) self.x = 0
-        }
+      for (let i = 0; i < balls.length; i++) {
+        balls[i].dx = balls[i].x - self.x
+      }
+      if (self.x - self.velocity >= 0) self.x -= self.velocity
+      else if (self.x - self.velocity < 0) self.x = 0
+      for (let i = 0; i < balls.length; i++) {
+        if (balls[i].onPaddle) balls[i].stickOnPaddle(balls[i].dx)
       }
     }
   }
+
   this.moveToRight = function () {
     if (gameState === 1 || gameState === 0) {
-      for (let ball of  balls) {
-        if (ball.onPaddle) {
-          let dx = ball.x - self.x
-          if ((self.x + self.width + self.velocity) <= maxWidth) self.x += self.velocity
-          if ((self.x + self.width + self.velocity) > maxWidth) self.x = maxWidth - self.width
-          ball.stickOnPaddle(dx)
-        } else {
-          if ((self.x + self.width + self.velocity) <= maxWidth) self.x += self.velocity
-          else if ((self.x + self.width + self.velocity) > maxWidth) self.x = maxWidth - self.width
-        }
+      for (let i = 0; i < balls.length; i++) {
+        balls[i].dx = balls[i].x - self.x
+      }
+      if ((self.x + self.width + self.velocity) <= maxWidth) self.x += self.velocity
+      if ((self.x + self.width + self.velocity) > maxWidth) self.x = maxWidth - self.width
+      for (let i = 0; i < balls.length; i++) {
+        if (balls[i].onPaddle) balls[i].stickOnPaddle(balls[i].dx)
       }
     }
   }
   this.moveByMouse = function (e) {
     var pointerX = e.clientX
     if (gameState === 1 || gameState === 0) {
-      for (let ball of balls) {
-        if (ball.onPaddle) {
-          let dx = ball.x - self.x
-          if (self.x >= 0 && self.x <= maxWidth - self.width) self.x = pointerX - self.width / 2
-          if (self.x < 0) self.x = 0
-          if (self.x > maxWidth - self.width) self.x = maxWidth - self.width
-          ball.stickOnPaddle(dx)
-        } else {
-          if (self.x >= 0 && self.x <= maxWidth - self.width) self.x = pointerX - self.width / 2
-          if (self.x < 0) self.x = 0
-          if (self.x > maxWidth - self.width) self.x = maxWidth - self.width
-        }
+      for (let i = 0; i < balls.length; i++) {
+        balls[i].dx = balls[i].x - self.x
+      }
+      if (self.x >= 0 && self.x <= maxWidth - self.width) self.x = pointerX - self.width / 2
+      if (self.x < 0) self.x = 0
+      if (self.x > maxWidth - self.width) self.x = maxWidth - self.width
+      for (let i = 0; i < balls.length; i++) {
+        if (balls[i].onPaddle) balls[i].stickOnPaddle(balls[i].dx)
       }
     }
   }
