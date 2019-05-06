@@ -1,4 +1,4 @@
-let Ball = function (onPaddle, xVelocity, yVelocity, x, y,magnitude) {
+let Ball = function (onPaddle, xVelocity, yVelocity, x, y, magnitude) {
   let self = this
   this.radius = 10
   this.x = x || maxWidth / 2
@@ -7,7 +7,7 @@ let Ball = function (onPaddle, xVelocity, yVelocity, x, y,magnitude) {
   this.xVelocity = xVelocity || 0
   this.yVelocity = yVelocity || 0
   this.onPaddle = onPaddle
-  this.velocityMagnitude = magnitude||1.5
+  this.velocityMagnitude = magnitude || 1.5
   this.getDirection = function () {
     let directionAngle
     if (Math.round(Math.random()) > 0.5) directionAngle = Math.random() * Math.PI / 3 + Math.PI / 12
@@ -37,7 +37,7 @@ let Ball = function (onPaddle, xVelocity, yVelocity, x, y,magnitude) {
   this.hitPaddle = function (self) {
     if ((self.y > (paddle.y - self.radius - self.yVelocity)) && (self.x >= paddle.x) && (self.x <= paddle.x + paddle.width)) {
       let dist = self.x - (paddle.x + paddle.width / 2)
-      self.xVelocity = self.xVelocity * 2 * dist / paddle.width * (self.xVelocity / self.velocityMagnitude) + Math.abs(Math.cos(Math.PI / 12) - Math.abs(self.xVelocity / self.velocityMagnitude)) * self.velocityMagnitude * dist / paddle.width
+      self.xVelocity = self.xVelocity * 2 * dist / paddle.width * (self.xVelocity / self.velocityMagnitude) + Math.abs(Math.cos(Math.PI / 12) - Math.abs(self.xVelocity / self.velocityMagnitude)) * self.velocityMagnitude * 2 * dist / paddle.width
       self.yVelocity = -Math.sqrt(self.velocityMagnitude * self.velocityMagnitude - self.xVelocity * self.xVelocity)
     }
   }
@@ -181,7 +181,13 @@ let Ball = function (onPaddle, xVelocity, yVelocity, x, y,magnitude) {
       blocks[r][c].status = false
     }
   }
-  this.draw = function (self) {
+  this.update = function () {
+    if (!self.onPaddle) {
+      self.x += self.xVelocity
+      self.y += self.yVelocity
+    }
+  }
+  this.draw = function () {
     ctx.arc(self.x, self.y, self.radius, 0, Math.PI * 2)
     ctx.fillStyle = self.color
     ctx.fill()

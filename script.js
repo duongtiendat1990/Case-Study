@@ -16,7 +16,7 @@ function Game () {
   this.startBall = function (ball) {
     ball.updateVelocity(ball.directionAngle, ball.velocityMagnitude)
     ball.onPaddle = false
-    setLevelUp = new IntervalTimer(self.levelUp, 60000)
+    setLevelUp = new IntervalTimer(self.levelUp,45000)
     accelerate = new IntervalTimer(self.accelerateBall, 1000)
   }
   this.restart = function () {
@@ -90,7 +90,6 @@ function Game () {
   this.start = function () {
     ctx.clearRect(0, 0, maxWidth, maxHeight)
     for (let ball of balls) {
-      paddle.draw()
       ball.hitEdges(ball)
       ball.hitPaddle(ball)
       ball.hitConnerOfPaddle(ball)
@@ -107,12 +106,15 @@ function Game () {
           }
         }
       }
-      self.updateBall(ball)
-      ball.draw(ball)
-      self.docReady()
-      paddle.move(ball)
-      drawBlocks()
     }
+    paddle.move()
+    paddle.draw()
+    for (let ball of balls){
+      ball.update()
+      ball.draw()
+    }
+    drawBlocks()
+    self.docReady()
     self.removeBall()
     self.checkWin()
     self.checkOver()
@@ -181,7 +183,7 @@ function Game () {
       case 'ControlLeft':
       case 'ControlRight':
         for (let ball of balls) ball.onPaddle = false
-        self.magnetCollected--
+        if (self.magnetCollected) self.magnetCollected--
         break
     }
   }
@@ -240,4 +242,3 @@ function Game () {
 
 let game = new Game()
 let run = new IntervalTimer(game.start, 1)
-let setLevelUp
