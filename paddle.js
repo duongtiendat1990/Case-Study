@@ -68,6 +68,7 @@ let Paddle = function () {
     ctx.beginPath()
     ctx.fillStyle = paddle.color
     ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height)
+    ctx.closePath()
   }
 }
 let paddle = new Paddle()

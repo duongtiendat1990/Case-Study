@@ -65,6 +65,7 @@ function Game () {
   this.checkWin = function () {
     if (self.score === blocks.length * blocks[blocks.length - 1].length) {
       self.showMessage('You Win')
+      gameState = 3
       run.stop()
       setLevelUp.stop()
       accelerate.stop()

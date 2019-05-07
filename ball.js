@@ -45,10 +45,12 @@ let Ball = function (onPaddle, xVelocity, yVelocity, x, y, magnitude) {
     let distanceToMaxHeight = maxHeight - self.radius - self.yVelocity
     let distanceToUpLeftConnerOfPaddle = Math.sqrt((paddle.x - self.x) * (paddle.x - self.x) +
       (paddle.y - self.y) * (paddle.y - self.y))
+    let ballGoesDownRight = self.xVelocity > 0 && self.yVelocity > 0
     let distanceToUpRightConnerOfPaddle = Math.sqrt((self.x - (paddle.x + paddle.width)) * (self.x - (paddle.x + paddle.width)) +
       (paddle.y - self.y) * (paddle.y - self.y))
-    if ((self.y < distanceToMaxHeight) && ((distanceToUpLeftConnerOfPaddle <= self.radius && self.x < paddle.x) ||
-      (distanceToUpRightConnerOfPaddle <= self.radius && self.x > paddle.x + paddle.width))) {
+    let ballGoesDownLeft = self.xVelocity < 0 && self.yVelocity > 0
+    if ((self.y < distanceToMaxHeight) && ((distanceToUpLeftConnerOfPaddle <= self.radius && self.x < paddle.x && ballGoesDownRight) ||
+      (distanceToUpRightConnerOfPaddle <= self.radius && self.x > paddle.x + paddle.width && ballGoesDownLeft))) {
       self.xVelocity = -self.xVelocity
       self.yVelocity = -self.yVelocity
     }
@@ -188,6 +190,7 @@ let Ball = function (onPaddle, xVelocity, yVelocity, x, y, magnitude) {
     }
   }
   this.draw = function () {
+    ctx.beginPath()
     ctx.arc(self.x, self.y, self.radius, 0, Math.PI * 2)
     ctx.fillStyle = self.color
     ctx.fill()

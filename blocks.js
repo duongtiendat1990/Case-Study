@@ -14,7 +14,8 @@ let Block = function (r, c) {
     else if (randomColor >= 0.01 && randomColor < 0.02) return 'gold'
     else return 'firebrick'
   }
-  this.color = this.getColor()
+  // this.color = this.getColor()
+  this.color = 'magenta'
   this.status = true
 
 }
