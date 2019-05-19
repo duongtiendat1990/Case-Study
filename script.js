@@ -75,16 +75,17 @@ function Game () {
   this.drawGuideline = function (stats) {
     stats.clearRect(0, 0, statsCanvas.width, statsCanvas.height)
     stats.beginPath()
-    stats.font = '20px Arial'
-    stats.strokeText('Score: ' + self.score, 0, 25)
     stats.fillStyle = 'gold'
     stats.fillRect(120, 8, blockWidth, blockHeight)
-    stats.strokeText('Add ball', 125 + blockWidth, 25)
     stats.fillStyle = 'magenta'
     stats.fillRect(220 + blockWidth, 8, blockWidth, blockHeight)
-    stats.strokeText('Magnet-Press\'Ctrl\' to use', 225 + blockWidth * 2, 25)
-    stats.strokeText('Press \'Space\' to start\/pause\/resume', 525 + blockWidth * 2, 25)
-    stats.strokeText('Magnets Collected: ' + self.magnetCollected, statsCanvas.width - 200, 25)
+    stats.font = '20px Arial'
+    stats.fillStyle = 'violet'
+    stats.fillText('Score: ' + self.score, 0, 25)
+    stats.fillText('Add ball', 125 + blockWidth, 25)
+    stats.fillText('Magnet-Press\'Ctrl\' to use', 225 + blockWidth * 2, 25)
+    stats.fillText('Press \'Space\' to start\/pause\/resume', 525 + blockWidth * 2, 25)
+    stats.fillText('Magnets Collected: ' + self.magnetCollected, statsCanvas.width - 200, 25)
     stats.closePath()
   }
 
@@ -231,12 +232,6 @@ function Game () {
         ball.y = paddle.y - ball.radius
         ball.onPaddle = true
       }
-    }
-  }
-  this.updateBall = function (ball) {
-    if (!ball.onPaddle) {
-      ball.x += ball.xVelocity
-      ball.y += ball.yVelocity
     }
   }
 }
