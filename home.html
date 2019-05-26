@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Bouncing Ball Game</title>
-    <style>
-        #message
-        {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 350px;
-            text-align: center;
-            font-size: 4em;
-            background: red;
-            visibility: hidden;
+  <meta charset="UTF-8">
+  <title>Bouncing Ball Game</title>
+  <style>
+    #message {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 350px;
+      text-align: center;
+      font-size: 4em;
+      background: red;
+      visibility: hidden;
 
-        }
-        html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        canvas{
-            margin: 0 !important;
-            padding: 0 !important;
-            display: block;
-            background-image: url('images/universe.jpg')
-        }
-    </style>
+    }
+
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    canvas {
+      margin: 0 !important;
+      padding: 0 !important;
+      display: block;
+      background-image: url('images/universe.jpg')
+    }
+  </style>
 </head>
 <body>
-<canvas id="myCanvas"></canvas><canvas id="stats"></canvas>
+<canvas id="myCanvas"></canvas>
+<canvas id="stats"></canvas>
 <div id="message"></div>
 <script src="paddle.js"></script>
 <script src="ball.js"></script>
