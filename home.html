@@ -7,8 +7,8 @@
         #message
         {
             position: absolute;
-            left: 0px;
-            right: 0px;
+            left: 0;
+            right: 0;
             top: 350px;
             text-align: center;
             font-size: 4em;
@@ -16,11 +16,20 @@
             visibility: hidden;
 
         }
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        canvas{
+            margin: 0 !important;
+            padding: 0 !important;
+            display: block;
+            background-image: url('images/universe.jpg')
+        }
     </style>
 </head>
 <body>
-<canvas id="myCanvas" style="border:1px solid #d3d3d3;"></canvas>
-<canvas id="stats" style="border:1px solid #d3d3d3;"></canvas>
+<canvas id="myCanvas"></canvas><canvas id="stats"></canvas>
 <div id="message"></div>
 <script src="paddle.js"></script>
 <script src="ball.js"></script>
